@@ -1,0 +1,47 @@
+\# Contributor: Sahil Soni <sscsps@gmail.com>
+# Maintainer: Sahil Soni <sscsps@gmail.com>
+# Reference: <https://postmarketos.org/vendorkernel>
+# Kernel config based on: arch/arm64/configs/(CHANGEME!)
+
+pkgname="linux-leeco-x3"
+pkgver=3.10.108
+pkgrel=0
+pkgdesc="LeEco Le 1s"
+arch="aarch64"
+_carch="arm64"
+_flavor="leeco-x3"
+url="https://kernel.org"
+license="GPL-2.0-only"
+options="!strip !check !tracedeps"
+makedepends="bash bc bison devicepkg-dev flex openssl-dev perl"
+
+# Source
+_repository="android_kernel_leeco_x3"
+_commit="5e888b445e350caaf6226419fbf5eb016c6e6adf"
+_config="config-$_flavor.$arch"
+source="
+	$pkgname-$_commit.tar.gz::https://github.com/Le1s/$_repository/archive/$_commit.tar.gz
+	$_config
+	gcc8-fix-put-user.patch
+"
+builddir="$srcdir/$_repository-$_commit"
+_outdir="out"
+
+prepare() {
+	default_prepare
+	. downstreamkernel_prepare
+}
+
+build() {
+	unset LDFLAGS
+	make O="$_outdir" ARCH="$_carch" CC="${CC:-gcc}" \
+		KBUILD_BUILD_VERSION="$((pkgrel + 1 ))-postmarketOS"
+}
+
+package() {
+	downstreamkernel_package "$builddir" "$pkgdir" "$_carch" "$_flavor" "$_outdir"
+}
+
+sha512sums="70a3fcef305e8b986831ded7d708a3a735971aeda06bbeefdb18c8eafdc382f35657cc9515830635c0a1304321403c7638cb1fc1cff1eb5ef5d51ed6e1c03ffa  linux-leeco-x3-5e888b445e350caaf6226419fbf5eb016c6e6adf.tar.gz
+00e67c697e0aba9715fd144386d39a793c5aaa486b4f884fbb46306363735fbed7284e352d76e1a3fe480a46d35936a5403de72f1631b654a5a73507639b3b6e  config-leeco-x3.aarch64
+197d40a214ada87fcb2dfc0ae4911704b9a93354b75179cd6b4aadbb627a37ec262cf516921c84a8b1806809b70a7b440cdc8310a4a55fca5d2c0baa988e3967  gcc8-fix-put-user.patch"

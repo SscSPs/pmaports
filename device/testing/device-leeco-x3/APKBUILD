@@ -1,0 +1,25 @@
+# Contributor: Firstname Lastname <email> (CHANGEME!)
+# Maintainer: Firstname Lastname <email> (CHANGEME!)
+# Reference: <https://postmarketos.org/devicepkg>
+pkgname="device-leeco-x3"
+pkgdesc="LeEco Le 1S"
+pkgver=0.1
+pkgrel=0
+url="https://postmarketos.org"
+license="MIT"
+arch="aarch64"
+options="!check !archcheck"
+depends="postmarketos-base linux-leeco-x3 mkbootimg mesa-dri-swrast"
+makedepends="devicepkg-dev"
+source="deviceinfo"
+
+build() {
+	devicepkg_build $startdir $pkgname
+}
+
+package() {
+	devicepkg_package $startdir $pkgname
+}
+
+
+sha512sums="d373f74d21674a80194e52d8e39e1e1c1102bd472fe54c785757d583374ad9d75c996480fc6993c59dff6d1573e69eff5e20f5ac8b186c536339b9d6a7bf76fa  deviceinfo"
